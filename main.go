@@ -2,144 +2,212 @@ package main
 
 import (
 	"database/sql"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
+	"strings"
+	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
-type Alat struct {
-	ID       int    `json:"id"`
-	Nama     string `json:"nama"`
-	Harga    int    `json:"harga"`
-	Kategori string `json:"kategori"`
-	FotoURL  string `json:"fotourl"` // base64 image
+// Model struct sesuai tabel MySQL
+type Tool struct {
+	ID          uint64     `json:"id"`
+	Name        string     `json:"name"`
+	Category    string     `json:"category"`
+	PricePerDay int        `json:"price_per_day"`
+	Status      string     `json:"status"`
+	Description *string    `json:"description,omitempty"`
+	ImageURL    *string    `json:"image_url,omitempty"`
+	CreatedAt   *time.Time `json:"created_at,omitempty"`
+	UpdatedAt   *time.Time `json:"updated_at,omitempty"`
 }
 
 var db *sql.DB
 
 func main() {
+	// Koneksi Database
 	var err error
-	db, err = sql.Open("mysql", "root:@tcp(127.0.0.1:3306)/alatdb")
+	db, err = sql.Open(
+		"mysql",
+		"root:@tcp(127.0.0.1:3306)/alatdb?parseTime=true",
+	)
 	if err != nil {
 		log.Fatal(err)
 	}
+	defer db.Close()
 
-	http.HandleFunc("/alatpertanian", handler)
+	// Routing sederhana
+	http.HandleFunc("/tools", toolsHandler)
+	http.HandleFunc("/tools/", toolDetailHandler)
 
-	fmt.Println("API berjalan di http://localhost:8080")
-	http.ListenAndServe(":8080", nil)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	fmt.Println("API jalan di port:", port)
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
-func handler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
+// ---------------------- Handlers ----------------------
+
+// GET /tools
+// POST /tools
+func toolsHandler(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		getAllTools(w, r)
+	case http.MethodPost:
+		createTool(w, r)
+	default:
+		http.Error(w, "Method tidak diperbolehkan", http.StatusMethodNotAllowed)
+	}
+}
+
+// GET /tools/{id}
+// PUT /tools/{id}
+// DELETE /tools/{id}
+func toolDetailHandler(w http.ResponseWriter, r *http.Request) {
+	idStr := strings.TrimPrefix(r.URL.Path, "/tools/")
+	id, err := strconv.Atoi(idStr)
+	if err != nil {
+		http.Error(w, "ID tidak valid", http.StatusBadRequest)
+		return
+	}
 
 	switch r.Method {
 	case http.MethodGet:
-		getAll(w, r)
-
-	case http.MethodPost:
-		create(w, r)
-
+		getToolByID(w, uint64(id))
 	case http.MethodPut:
-		update(w, r)
-
+		updateTool(w, r, uint64(id))
 	case http.MethodDelete:
-		deleteItem(w, r)
-
+		deleteTool(w, uint64(id))
 	default:
-		http.Error(w, "Method tidak diizinkan", 405)
+		http.Error(w, "Method tidak diperbolehkan", http.StatusMethodNotAllowed)
 	}
 }
 
-func getAll(w http.ResponseWriter, r *http.Request) {
-	rows, err := db.Query("SELECT id, nama, harga, kategori, fotourl FROM alatpertanian")
+// ---------------------- CRUD Functions ----------------------
+
+func getAllTools(w http.ResponseWriter, r *http.Request) {
+	rows, err := db.Query("SELECT * FROM tools")
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(w, "Query gagal", 500)
 		return
 	}
+	defer rows.Close()
 
-	var result []Alat
+	var tools []Tool
+
 	for rows.Next() {
-		var a Alat
-		rows.Scan(&a.ID, &a.Nama, &a.Harga, &a.Kategori, &a.FotoURL)
-		result = append(result, a)
+		var t Tool
+		var desc, img sql.NullString
+		var cAt, uAt sql.NullTime
+
+		rows.Scan(&t.ID, &t.Name, &t.Category, &t.PricePerDay, &t.Status,
+			&desc, &img, &cAt, &uAt)
+
+		if desc.Valid {
+			t.Description = &desc.String
+		}
+		if img.Valid {
+			t.ImageURL = &img.String
+		}
+		if cAt.Valid {
+			t.CreatedAt = &cAt.Time
+		}
+		if uAt.Valid {
+			t.UpdatedAt = &uAt.Time
+		}
+
+		tools = append(tools, t)
 	}
 
-	json.NewEncoder(w).Encode(result)
+	json.NewEncoder(w).Encode(tools)
 }
 
-func create(w http.ResponseWriter, r *http.Request) {
-	r.ParseMultipartForm(10 << 20) // max 10MB
+func getToolByID(w http.ResponseWriter, id uint64) {
+	row := db.QueryRow("SELECT * FROM tools WHERE id = ?", id)
 
-	file, _, err := r.FormFile("foto")
-	if err != nil {
-		http.Error(w, "Foto tidak ditemukan", 400)
+	var t Tool
+	var desc, img sql.NullString
+	var cAt, uAt sql.NullTime
+
+	err := row.Scan(&t.ID, &t.Name, &t.Category, &t.PricePerDay, &t.Status,
+		&desc, &img, &cAt, &uAt)
+
+	if err == sql.ErrNoRows {
+		http.Error(w, "Not found", 404)
 		return
 	}
-	defer file.Close()
 
-	fileBytes, _ := io.ReadAll(file)
-	base64Image := base64.StdEncoding.EncodeToString(fileBytes)
+	if desc.Valid {
+		t.Description = &desc.String
+	}
+	if img.Valid {
+		t.ImageURL = &img.String
+	}
+	if cAt.Valid {
+		t.CreatedAt = &cAt.Time
+	}
+	if uAt.Valid {
+		t.UpdatedAt = &uAt.Time
+	}
 
-	nama := r.FormValue("nama")
-	harga, _ := strconv.Atoi(r.FormValue("harga"))
-	kategori := r.FormValue("kategori")
+	json.NewEncoder(w).Encode(t)
+}
 
-	res, err := db.Exec("INSERT INTO alatpertanian (nama, harga, kategori, fotourl) VALUES (?, ?, ?, ?)",
-		nama, harga, kategori, base64Image)
+func createTool(w http.ResponseWriter, r *http.Request) {
+	var t Tool
+	json.NewDecoder(r.Body).Decode(&t)
+
+	res, err := db.Exec(
+		"INSERT INTO tools (name,category,price_per_day,status,description,image_url,created_at,updated_at) VALUES (?,?,?,?,?,?,NOW(),NOW())",
+		t.Name, t.Category, t.PricePerDay, t.Status,
+		t.Description, t.ImageURL,
+	)
 
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(w, "Gagal insert", 500)
 		return
 	}
 
 	id, _ := res.LastInsertId()
-	json.NewEncoder(w).Encode(map[string]any{
-		"id":       id,
-		"nama":     nama,
-		"harga":    harga,
-		"kategori": kategori,
-		"fotourl":  base64Image,
-	})
+	t.ID = uint64(id)
+
+	json.NewEncoder(w).Encode(t)
 }
 
-func update(w http.ResponseWriter, r *http.Request) {
-	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
-	r.ParseMultipartForm(10 << 20)
+func updateTool(w http.ResponseWriter, r *http.Request, id uint64) {
+	var t Tool
+	json.NewDecoder(r.Body).Decode(&t)
 
-	nama := r.FormValue("nama")
-	harga, _ := strconv.Atoi(r.FormValue("harga"))
-	kategori := r.FormValue("kategori")
-
-	var base64Image string
-
-	file, _, err := r.FormFile("foto")
-	if err == nil {
-		fileBytes, _ := io.ReadAll(file)
-		base64Image = base64.StdEncoding.EncodeToString(fileBytes)
-	} else {
-		db.QueryRow("SELECT fotourl FROM alatpertanian WHERE id=?", id).Scan(&base64Image)
-	}
-
-	_, err = db.Exec("UPDATE alatpertanian SET nama=?, harga=?, kategori=?, fotourl=? WHERE id=?",
-		nama, harga, kategori, base64Image, id)
+	_, err := db.Exec(
+		"UPDATE tools SET name=?, category=?, price_per_day=?, status=?, description=?, image_url=?, updated_at=NOW() WHERE id=?",
+		t.Name, t.Category, t.PricePerDay, t.Status,
+		t.Description, t.ImageURL, id,
+	)
 
 	if err != nil {
-		http.Error(w, err.Error(), 500)
+		http.Error(w, "Gagal update", 500)
 		return
 	}
 
-	json.NewEncoder(w).Encode("updated")
+	t.ID = id
+	json.NewEncoder(w).Encode(t)
 }
 
-func deleteItem(w http.ResponseWriter, r *http.Request) {
-	id, _ := strconv.Atoi(r.URL.Query().Get("id"))
-	db.Exec("DELETE FROM alatpertanian WHERE id=?", id)
-	json.NewEncoder(w).Encode("deleted")
+func deleteTool(w http.ResponseWriter, id uint64) {
+	_, err := db.Exec("DELETE FROM tools WHERE id = ?", id)
+	if err != nil {
+		http.Error(w, "Gagal delete", 500)
+		return
+	}
+
+	w.Write([]byte(`{"status":"deleted"}`))
 }
