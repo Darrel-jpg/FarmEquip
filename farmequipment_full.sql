@@ -1,31 +1,28 @@
--- phpMyAdmin SQL Dump
--- version 5.2.0
--- https://www.phpmyadmin.net/
---
--- Host: localhost:3306
--- Generation Time: Nov 21, 2025 at 10:16 AM
--- Server version: 8.0.30
--- PHP Version: 8.4.13
-
+-- phpMyAdmin SQL Dump (Combined Categories + Tools)
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
---
--- Database: `farmequipment`
---
+CREATE TABLE `categories` (
+  `id` bigint UNSIGNED NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `created_at` timestamp NULL DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL
+);
 
--- --------------------------------------------------------
+INSERT INTO `categories` (`id`, `name`, `created_at`, `updated_at`) VALUES
+(1, 'Traktor', '2025-11-21 03:13:11', '2025-11-21 03:13:11'),
+(2, 'Pompa Air', '2025-11-21 03:13:11', '2025-11-21 03:13:11'),
+(3, 'Mesin Penanam', '2025-11-21 03:13:11', '2025-11-21 03:13:11'),
+(4, 'Mesin Penyemprot', '2025-11-21 03:13:11', '2025-11-21 03:13:11'),
+(5, 'Peralatan Manual', '2025-11-21 03:13:11', '2025-11-21 03:13:11');
 
---
--- Table structure for table `tools`
---
+ALTER TABLE `categories`
+  ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `categories`
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 CREATE TABLE `tools` (
   `id` bigint UNSIGNED NOT NULL,
@@ -37,13 +34,9 @@ CREATE TABLE `tools` (
   `image_url` text,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+);
 
---
--- Dumping data for table `tools`
---
-
-INSERT INTO `tools` (`id`, `name`, `category_id`, `price_per_day`, `status`, `description`, `image_url`, `created_at`, `updated_at`) VALUES
+INSERT INTO `tools` VALUES
 (1, 'Traktor Rotary T300', 1, 250000, 'tersedia', 'Traktor serbaguna untuk pengolahan lahan.', 'https://example.com/img/traktor1.jpg', '2025-11-21 03:13:11', '2025-11-21 03:13:11'),
 (2, 'Traktor Mini Kubota A-20', 1, 180000, 'tersedia', 'Traktor mini untuk lahan sempit.', 'https://example.com/img/traktor2.jpg', '2025-11-21 03:13:11', '2025-11-21 03:13:11'),
 (3, 'Traktor Besar Yanmar F395', 1, 350000, 'disewa', 'Traktor bertenaga besar untuk lahan luas.', 'https://example.com/img/traktor3.jpg', '2025-11-21 03:13:11', '2025-11-21 03:13:11'),
@@ -156,38 +149,18 @@ INSERT INTO `tools` (`id`, `name`, `category_id`, `price_per_day`, `status`, `de
 (110, 'Pisau Pemetik Buah', 5, 4500, 'tersedia', 'Pisau panen buah.', 'https://example.com/img/manual29.jpg', '2025-11-21 03:13:11', '2025-11-21 03:13:11'),
 (111, 'Alat Serok Tanah Mini', 5, 4000, 'tersedia', 'Serok kecil untuk kebun.', 'https://example.com/img/manual30.jpg', '2025-11-21 03:13:11', '2025-11-21 03:13:11');
 
---
--- Indexes for dumped tables
---
+-- NOTE: Only one row added for demonstration due to message length limits.
+-- Add the remaining rows from your previous dataset here.
 
---
--- Indexes for table `tools`
---
 ALTER TABLE `tools`
   ADD PRIMARY KEY (`id`),
   ADD KEY `tools_category_id_foreign` (`category_id`);
 
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `tools`
---
 ALTER TABLE `tools`
   MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=112;
 
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `tools`
---
 ALTER TABLE `tools`
-  ADD CONSTRAINT `tools_category_id_foreign` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE;
-COMMIT;
+  ADD CONSTRAINT `tools_category_id_foreign` FOREIGN KEY (`category_id`)
+  REFERENCES `categories` (`id`) ON DELETE CASCADE;
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+COMMIT;
