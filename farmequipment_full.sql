@@ -1,24 +1,18 @@
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
-/*!40101 SET NAMES utf8mb4 */;
+-- Membuat database
+CREATE DATABASE IF NOT EXISTS `alatdb`
+  DEFAULT CHARACTER SET utf8mb4
+  COLLATE utf8mb4_general_ci;
 
-CREATE TABLE `tools` (
-  `id` bigint UNSIGNED NOT NULL,
+USE `alatdb`;
+
+CREATE TABLE IF NOT EXISTS `tools` (
+  `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `name` varchar(150) NOT NULL,
   `category` varchar(100) NOT NULL,
   `price_per_day` int NOT NULL,
   `status` enum('tersedia','disewa') NOT NULL DEFAULT 'tersedia',
   `description` text,
   `image_url` text,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-ALTER TABLE `tools`
-  ADD PRIMARY KEY (`id`);
-
-ALTER TABLE `tools`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT;
-  
-COMMIT;
