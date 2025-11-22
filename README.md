@@ -1,13 +1,10 @@
-# Tool Rental API Documentation
+# Tool Alat Pertanian
 
 API untuk manajemen penyewaan alat dengan pendekatan functional programming menggunakan Go.
 
 ## 📋 Daftar Isi
 - [Fitur](#fitur)
-- [Persyaratan](#persyaratan)
 - [Instalasi](#instalasi)
-- [Konfigurasi Database](#konfigurasi-database)
-- [Menjalankan Aplikasi](#menjalankan-aplikasi)
 - [Endpoint API](#endpoint-api)
 - [Contoh Penggunaan](#contoh-penggunaan)
 - [Error Handling](#error-handling)
@@ -23,68 +20,26 @@ API untuk manajemen penyewaan alat dengan pendekatan functional programming meng
 - Logging middleware
 - Health check endpoint
 
-## 🔧 Persyaratan
-
-- Go 1.16 atau lebih tinggi
-- MySQL 5.7 atau lebih tinggi
-- Dependencies:
-  ```bash
-  go get github.com/gorilla/mux
-  go get github.com/go-sql-driver/mysql
-  ```
 
 ## 📦 Instalasi
 
-1. Clone repository atau salin kode aplikasi
-2. Install dependencies:
-   ```bash
-   go mod init tool-rental-api
-   go get github.com/gorilla/mux
-   go get github.com/go-sql-driver/mysql
-   ```
+cara mengaktifkan route api
+1. Clone repo
+2. run farmequipment.sql di database mysql
+3. go run main.go
 
-## 🗄️ Konfigurasi Database
-
-1. Buat database MySQL:
-   ```sql
-   CREATE DATABASE alatdb;
-   USE alatdb;
-   ```
-
-2. Buat tabel `tools`:
-   ```sql
-   CREATE TABLE tools (
-       id BIGINT AUTO_INCREMENT PRIMARY KEY,
-       name VARCHAR(255) NOT NULL,
-       category VARCHAR(100) NOT NULL,
-       price_per_day INT NOT NULL,
-       status VARCHAR(50) NOT NULL,
-       description TEXT,
-       image_url VARCHAR(500),
-       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-   );
-   ```
-
-3. Sesuaikan connection string di `main()`:
-   ```go
-   db, err := sql.Open("mysql", "username:password@tcp(localhost:3306)/alatdb?parseTime=true")
-   ```
-
-## 🚀 Menjalankan Aplikasi
-
-```bash
-go run main.go
-```
-
-Server akan berjalan pada `http://localhost:8080`
+cara menggunakan laravel
+1. clone repo
+2. composer install
+3. npm run build
+4. php artisan key:generate
 
 ## 📡 Endpoint API
 
 ### 1. Health Check
 Memeriksa status kesehatan aplikasi dan koneksi database.
 
-**Endpoint:** `GET /health`
+**Endpoint:** `GET http://localhost:8080/health`
 
 **Response:**
 ```json
@@ -99,7 +54,7 @@ Memeriksa status kesehatan aplikasi dan koneksi database.
 ### 2. Get All Tools
 Mengambil semua alat yang tersedia dengan filtering, transformasi, dan agregasi.
 
-**Endpoint:** `GET /tools`
+**Endpoint:** `GET http://localhost:8080/tools`
 
 **Response:**
 ```json
@@ -130,7 +85,7 @@ Mengambil semua alat yang tersedia dengan filtering, transformasi, dan agregasi.
 ### 3. Get Tool by ID
 Mengambil detail alat berdasarkan ID.
 
-**Endpoint:** `GET /tools/{id}`
+**Endpoint:** `GET http://localhost:8080/tools/{id}`
 
 **Parameter:**
 - `id` (path parameter): ID alat
@@ -161,7 +116,7 @@ Mengambil detail alat berdasarkan ID.
 ### 4. Create Tool
 Membuat alat baru.
 
-**Endpoint:** `POST /tools`
+**Endpoint:** `POST http://localhost:8080/tools`
 
 **Request Body:**
 ```json
@@ -209,7 +164,7 @@ Membuat alat baru.
 ### 5. Update Tool
 Mengupdate data alat (partial update supported).
 
-**Endpoint:** `PUT /tools/{id}`
+**Endpoint:** `PUT http://localhost:8080/tools/{id}`
 
 **Parameter:**
 - `id` (path parameter): ID alat
@@ -254,7 +209,7 @@ Mengupdate data alat (partial update supported).
 ### 6. Delete Tool
 Menghapus alat berdasarkan ID.
 
-**Endpoint:** `DELETE /tools/{id}`
+**Endpoint:** `DELETE http://localhost:8080/tools/{id}`
 
 **Parameter:**
 - `id` (path parameter): ID alat
@@ -424,32 +379,3 @@ API menggunakan custom error handling dengan format standar:
   "message": "Failed to fetch tools"
 }
 ```
-
-## 🏗️ Arsitektur
-
-Aplikasi ini dibangun dengan pendekatan functional programming:
-
-- **Repository Pattern**: Abstraksi akses data
-- **Higher-Order Functions**: Handler functions dengan closure
-- **Pure Functions**: Transformasi data tanpa side effects
-- **Immutability**: Data structures yang tidak berubah
-- **Map, Filter, Reduce**: Transformasi data fungsional
-- **Concurrent Processing**: Goroutines untuk data fetching
-- **Middleware**: Logging untuk setiap request
-
-## 📝 Catatan Tambahan
-
-- Server menggunakan logging middleware yang mencatat setiap request
-- Koneksi database menggunakan connection pooling default dari `database/sql`
-- Semua response menggunakan format JSON
-- Field `description` dan `image_url` bersifat optional (nullable)
-- Status default untuk tool baru adalah "tersedia"
-- Endpoint `/tools` (GET) menerapkan filter otomatis untuk status "tersedia"
-
-## 📄 Lisensi
-
-Dokumentasi ini dibuat untuk keperluan pembelajaran dan pengembangan API Tool Rental.
-
----
-
-**Dibuat dengan ❤️ menggunakan Go dan Functional Programming**
