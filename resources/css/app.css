@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source "../node_modules/flowbite";
+
+@theme {
+  --font-sans: 'Momo Trust Sans', sans-serif;
+}
