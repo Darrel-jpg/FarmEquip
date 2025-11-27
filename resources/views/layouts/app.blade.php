@@ -12,7 +12,7 @@
 
 <body class="flex flex-col min-h-screen">
     <x-navbar></x-navbar>
-    <main class="grow pt-20 px-4 py-6 sm:px-6 lg:px-8">
+    <main class="grow pt-10 px-4 py-6 sm:px-6 lg:px-8">
         @yield('content')
     </main>
     <script src="../path/to/flowbite/dist/flowbite.min.js"></script>

@@ -8,68 +8,65 @@ import (
 )
 
 func Login(db *sql.DB) http.HandlerFunc {
-    return func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 
-        var req models.User
-        json.NewDecoder(r.Body).Decode(&req)
+		var req models.User
+		json.NewDecoder(r.Body).Decode(&req)
 
-        if (req.Email == "" && req.Username == "") || req.Password == "" {
-            w.Write([]byte("Email/Username dan Password wajib diisi"))
-            return
-        }
+		if (req.Email == "" && req.Username == "") || req.Password == "" {
+			w.Write([]byte("Email/Username dan Password wajib diisi"))
+			return
+		}
 
-        var user models.User
-        err := db.QueryRow(
-            "SELECT id, nama, email, username FROM users WHERE (email = ? OR username = ?) AND password = ?",
-            req.Email, req.Username, req.Password,
-        ).Scan(&user.ID, &user.Nama, &user.Email, &user.Username)
+		var user models.User
+		err := db.QueryRow(
+			"SELECT id, nama, email, username FROM users WHERE (email = ? OR username = ?) AND password = ?",
+			req.Email, req.Username, req.Password,
+		).Scan(&user.ID, &user.Nama, &user.Email, &user.Username)
 
-        if err != nil {
-            if err == sql.ErrNoRows {
-                w.Write([]byte("Email/Username atau password salah"))
-                return
-            }
-            w.Write([]byte(err.Error()))
-            return
-        }
+		if err != nil {
+			if err == sql.ErrNoRows {
+				w.Write([]byte("Email/Username atau password salah"))
+				return
+			}
+			w.Write([]byte(err.Error()))
+			return
+		}
 
-        json.NewEncoder(w).Encode(map[string]interface{}{
-            "status": "success",
-            "user":   user,
-        })
-    }
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"status": "success",
+			"user":   user,
+		})
+	}
 }
 
-
 func UpdateUser(db *sql.DB) http.HandlerFunc {
-    return func(w http.ResponseWriter, r *http.Request) {
+	return func(w http.ResponseWriter, r *http.Request) {
 
-        id := r.URL.Query().Get("id")
-        if id == "" {
-            w.Write([]byte("Parameter id diperlukan"))
-            return
-        }
+		id := r.URL.Query().Get("id")
+		if id == "" {
+			w.Write([]byte("Parameter id diperlukan"))
+			return
+		}
 
-        var u models.User
-        json.NewDecoder(r.Body).Decode(&u)
+		var u models.User
+		json.NewDecoder(r.Body).Decode(&u)
 
-        _, err := db.Exec(`
+		_, err := db.Exec(`
             UPDATE users 
             SET nama = ?, email = ?, username = ?, password = ? 
             WHERE id = ?`,
-            u.Nama, u.Email, u.Username, u.Password, id,
-        )
+			u.Nama, u.Email, u.Username, u.Password, id,
+		)
 
-        if err != nil {
-            w.Write([]byte(err.Error()))
-            return
-        }
+		if err != nil {
+			w.Write([]byte(err.Error()))
+			return
+		}
 
-        w.Write([]byte("User berhasil diupdate"))
-    }
+		w.Write([]byte("User berhasil diupdate"))
+	}
 }
-
-
 
 // func GetUsers(db *sql.DB) http.HandlerFunc {
 // 	return func(w http.ResponseWriter, r *http.Request) {
