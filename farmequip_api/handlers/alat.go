@@ -7,12 +7,17 @@ import (
 	"farmequip_api/models"
 	"io"
 	"net/http"
+	"sort"
 
 	"github.com/gorilla/mux"
 )
 
 func GetAlat(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+
+		// Ambil query param sort
+		sortParam := r.URL.Query().Get("sort")
 
 		rows, err := db.Query(`
             SELECT 
@@ -57,18 +62,41 @@ func GetAlat(db *sql.DB) http.HandlerFunc {
 				return
 			}
 
-			// convert ke base64
 			a.Gambar = base64.StdEncoding.EncodeToString(imgBytes)
-
 			list = append(list, a)
 		}
 
+		// ================================
+		// ✨ TRANSFORMASI DATA: SORTING FP
+		// ================================
+		sort.Slice(list, func(i, j int) bool {
+			switch sortParam {
+			case "nama_asc":
+				return list[i].NamaAlat < list[j].NamaAlat
+			case "nama_desc":
+				return list[i].NamaAlat > list[j].NamaAlat
+			case "harga_asc":
+				return list[i].HargaHarian < list[j].HargaHarian
+			case "harga_desc":
+				return list[i].HargaHarian > list[j].HargaHarian
+			case "newest":
+				return list[i].ID > list[j].ID
+			case "oldest":
+				return list[i].ID < list[j].ID
+			default:
+				// default: oldest (ID ascending)
+				return list[i].ID < list[j].ID
+			}
+		})
+
+		// Output JSON
 		json.NewEncoder(w).Encode(list)
 	}
 }
 
 func GetToolById(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
 		id := mux.Vars(r)["id"]
 
 		row := db.QueryRow("SELECT id, nama_alat, kategori_id, deskripsi, harga_per_hari, harga_per_minggu, harga_per_bulan FROM alat_pertanian WHERE id = ?", id)
@@ -132,7 +160,7 @@ func CreateAlat(db *sql.DB) http.HandlerFunc {
 
 func GetAlatBySlug(db *sql.DB) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
+		w.Header().Set("Content-Type", "application/json")
 		slug := mux.Vars(r)["slug"]
 		if slug == "" {
 			w.Write([]byte("Slug kategori wajib diisi"))

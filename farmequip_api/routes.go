@@ -2,9 +2,10 @@ package main
 
 import (
 	"database/sql"
-	"net/http"
-	"github.com/gorilla/mux"
 	"farmequip_api/handlers"
+	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func enableCORS(next http.HandlerFunc) http.HandlerFunc {
@@ -23,7 +24,7 @@ func enableCORS(next http.HandlerFunc) http.HandlerFunc {
 
 func SetupRoutes(db *sql.DB) {
 	r := mux.NewRouter()
-
+	//http://localhost:8080/route
 	// Login
 	r.HandleFunc("/login", enableCORS(handlers.Login(db))).Methods("POST")
 
@@ -42,12 +43,8 @@ func SetupRoutes(db *sql.DB) {
 	r.HandleFunc("/alat", enableCORS(handlers.UpdateAlat(db))).Methods("PUT")
 	r.HandleFunc("/alat", enableCORS(handlers.DeleteAlat(db))).Methods("DELETE")
 
-	// Get alat by slug kategori
-	r.HandleFunc("/alat/{id}", enableCORS(handlers.GetToolById(db))).Methods("GET")
-	r.HandleFunc("/alat/{slug}", enableCORS(handlers.GetAlatBySlug(db))).Methods("GET")
-
-
-	// GET alat by ID
+	r.HandleFunc("/alat/{id:[0-9]+}", enableCORS(handlers.GetToolById(db))).Methods("GET")
+	r.HandleFunc("/alat/{slug:[a-zA-Z0-9-_]+}", enableCORS(handlers.GetAlatBySlug(db))).Methods("GET")
 
 	http.Handle("/", r)
 }
