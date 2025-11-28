@@ -33,3 +33,6 @@ Route::middleware(['role:admin'])
         Route::put('tools/{id}', [ToolAdminController::class, 'update'])->name('tools.update');
         Route::delete('tools/{id}', [ToolAdminController::class, 'destroy'])->name('tools.destroy');
     });
+
+// LOGOUT ADMIN
+Route::get('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');

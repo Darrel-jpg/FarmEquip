@@ -22,6 +22,11 @@
                 <li>
                     <x-nav-link href="/admin/management" :active="request()->is('admin/management')">Management</x-nav-link>
                 </li>
+                <li>
+                    <x-nav-link href="{{ route('admin.logout') }}">
+                        Logout
+                    </x-nav-link>
+                </li>
                 {{-- <li>
           <a href="#" class="block py-2 px-3 text-heading rounded hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:hover:text-fg-brand md:p-0">About</a>
         </li> --}}

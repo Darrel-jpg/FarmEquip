@@ -47,4 +47,12 @@ class AdminAuthController extends Controller
 
         return redirect()->route('admin.dashboard');
     }
+
+    public function logout(Request $req)
+    {
+        $req->session()->forget('admin_logged_in');
+        $req->session()->forget('admin');
+
+        return redirect()->route('admin.login')->with('msg', 'Berhasil logout');
+    }
 }
