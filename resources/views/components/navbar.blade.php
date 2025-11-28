@@ -15,9 +15,6 @@
         <li>
             <x-nav-link href="/tools" :active="request()->is('tools')">Farm Tools</x-nav-link>
         </li>
-        <li>
-            <x-nav-link href="#" :active="request()->is('contact')">Contact</x-nav-link>
-        </li>
       </ul>
     </div>
   </div>
