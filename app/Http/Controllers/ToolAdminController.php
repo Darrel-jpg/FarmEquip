@@ -13,98 +13,87 @@ class ToolAdminController extends Controller
 {
     private string $baseApi = 'https://farmequip.up.railway.app/alat';
 
-    // ✅ Tampil dashboard admin (list + filter)
-    public function index(Request $request)
+    // ✅ Tampil list tools + filter
+    public function index()
     {
-        $response = Http::get($this->baseApi);
+        $res = Http::get("https://farmequip.up.railway.app/alat");
+        $tools = $res->successful() ? $res->json() : [];
 
-        $tools = [];
-        $filters = $this->getFilters($request);
+        $catRes = Http::get("https://farmequip.up.railway.app/kategori");
+        $categories = $catRes->successful() ? $catRes->json() : [];
 
-        if ($response->successful()) {
-            $tools = collect($response->json());
-
-            // Pakai filter yang sama logic nya seperti guest (boleh juga copas method jika mau)
-            $tools = $this->applyFilters($tools, $request);
-        }
-
-        return view('admin.catalog', [
-            'tools'   => $tools instanceof Collection ? $tools->values()->all() : $tools,
-            'filters' => $filters
+        return view('admin.manage.index', [
+            'tools' => $tools,
+            'categories' => $categories,
+            'api' => "https://farmequip.up.railway.app/alat" // ✅ tambahkan ini
         ]);
     }
 
-    // ✅ View form create
+    // ✅ Buka form create (ambil kategori untuk dropdown dari API)
     public function create()
     {
-        return view('admin.create');
-    }
+        $response = Http::get('https://farmequip.up.railway.app/kategori');
+        $categories = $response->successful() ? $response->json() : [];
 
-    // ✅ Simpan data (Create)
-    public function store(Request $request)
-    {
-        $request->validate([
-            'nama_alat'      => 'required|string',
-            'nama_kategori'  => 'required|string',
-            'harga_per_hari' => 'required|numeric',
-            'status'         => 'required|string'
+        return view('admin.manage.form', [
+            'mode'       => 'create',
+            'header'     => 'Add New Tool',
+            'categories' => $categories
         ]);
-
-        $response = Http::post($this->baseApi, $request->all());
-
-        if (!$response->successful()) {
-            return back()->with('error', 'Gagal menambah tool!');
-        }
-
-        return redirect()->route('admin.tools')->with('success', 'Tool berhasil ditambahkan!');
     }
 
-    // ✅ View form edit
+    // ✅ Buka form edit (tool + kategori dari API)
     public function edit($id)
     {
         $response = Http::get("{$this->baseApi}/{$id}");
+        $cat      = Http::get('https://farmequip.up.railway.app/kategori');
 
         if (!$response->successful()) {
-            return redirect()->route('admin.tools')->with('error', 'Tool tidak ditemukan!');
+            return back()->with('error', 'Tool tidak ditemukan! ❌');
         }
 
-        $tool = $response->json();
-
-        return view('admin.edit', compact('tool'));
+        return view('admin.manage.form', [
+            'mode'       => 'edit',
+            'header'     => 'Edit Tool',
+            'tool'       => $response->json(),
+            'categories' => $cat->successful() ? $cat->json() : []
+        ]);
     }
 
-    // ✅ Update data (Edit)
+    // ✅ Simpan tool baru (POST ke API)
+    public function store(Request $request)
+    {
+        $response = Http::post($this->baseApi, $request->all());
+
+        return back()->with(
+            $response->successful() ? 'success' : 'error',
+            $response->successful() ? 'Tool berhasil ditambahkan! ✅' : 'Gagal menambah tool! ❌'
+        );
+    }
+
+    // ✅ Update tool (PUT ke API)
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'nama_alat'      => 'required|string',
-            'nama_kategori'  => 'required|string',
-            'harga_per_hari' => 'required|numeric',
-            'status'         => 'required|string'
-        ]);
-
         $response = Http::put("{$this->baseApi}/{$id}", $request->all());
 
-        if (!$response->successful()) {
-            return back()->with('error', 'Gagal update tool!');
-        }
-
-        return redirect()->route('admin.tools')->with('success', 'Tool berhasil diupdate!');
+        return back()->with(
+            $response->successful() ? 'success' : 'error',
+            $response->successful() ? 'Tool berhasil diupdate! ✅' : 'Gagal update tool! ❌'
+        );
     }
 
-    // ✅ Hapus data (Delete)
+    // ✅ Hapus tool (DELETE ke API)
     public function destroy($id)
     {
         $response = Http::delete("{$this->baseApi}/{$id}");
 
-        if (!$response->successful()) {
-            return back()->with('error', 'Gagal menghapus tool!');
-        }
-
-        return back()->with('success', 'Tool berhasil dihapus!');
+        return back()->with(
+            $response->successful() ? 'success' : 'error',
+            $response->successful() ? 'Tool berhasil dihapus! ✅' : 'Gagal menghapus tool! ❌'
+        );
     }
 
-    // 👉 Optional jika mau admin filter pakai method yang sama persis seperti guest
+    // 🔍 Filter logic (copas dari guest)
     private function applyFilters(Collection $tools, Request $request): Collection
     {
         if ($request->filled('search')) {
@@ -135,7 +124,6 @@ class ToolAdminController extends Controller
                 'price_low'  => $tools->sortBy('harga_per_hari'),
                 'price_high' => $tools->sortByDesc('harga_per_hari'),
                 'popular'    => $tools->sortByDesc('views'),
-                'reviews'    => $tools->sortByDesc('rating'),
                 default      => $tools
             };
         }
