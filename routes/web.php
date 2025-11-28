@@ -3,23 +3,33 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ToolController;
 use App\Http\Controllers\ToolAdminController;
+use App\Http\Controllers\AdminAuthController;
 
 Route::get('/', function () {
     return view('home');
 });
 
-Route::get('/tools', [ToolController::class, 'index'])->name('catalog');
-Route::get('/tools/{id}', [ToolController::class, 'product'])->name('product');
+// Public tools
+Route::get('tools', [ToolController::class, 'index'])->name('catalog');
+Route::get('tools/{id}', [ToolController::class, 'product'])->name('product');
 
-Route::prefix('/admin')->group(function () {
+// ADMIN AUTH
+Route::get('admin/login', [AdminAuthController::class, 'showLogin'])->name('admin.login');
+Route::post('admin/login', [AdminAuthController::class, 'login'])->name('admin.login.post');
 
-    Route::get('/dashboard', function () {
-        return view('admin.home');
-    })->name('admin.dashboard');
-    Route::get('/tools', [ToolAdminController::class, 'index'])
-        ->name('admin.tools');
-    Route::get('/tools/create', [ToolAdminController::class, 'create'])->name('admin.tools.create');
-    Route::get('/tools/{id}/edit', [ToolAdminController::class, 'edit'])->name('admin.tools.edit');
-    Route::put('/tools/{id}', [ToolAdminController::class, 'update'])->name('admin.tools.update');
-    Route::delete('/tools/{id}', [ToolAdminController::class, 'destroy'])->name('admin.tools.destroy');
-});
+// ADMIN PROTECTED (tanpa bootstrap, tanpa auth.admin)
+Route::middleware(['role:admin'])
+    ->prefix('admin')
+    ->name('admin.')
+    ->group(function () {
+
+        Route::get('dashboard', function () {
+            return view('admin.home');
+        })->name('dashboard');
+
+        Route::get('tools', [ToolAdminController::class, 'index'])->name('tools');
+        Route::get('tools/create', [ToolAdminController::class, 'create'])->name('tools.create');
+        Route::get('tools/{id}/edit', [ToolAdminController::class, 'edit'])->name('tools.edit');
+        Route::put('tools/{id}', [ToolAdminController::class, 'update'])->name('tools.update');
+        Route::delete('tools/{id}', [ToolAdminController::class, 'destroy'])->name('tools.destroy');
+    });
