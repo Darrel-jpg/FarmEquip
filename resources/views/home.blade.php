@@ -94,7 +94,7 @@
     {{-- SCRIPT: LOGIKA ICON CERDAS (Bukan Random Emoji) --}}
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            const kategoriApiUrl = 'http://localhost:8080/kategori';
+            const kategoriApiUrl = 'https://farmequip.up.railway.app/kategori';
             const container = document.getElementById('kategori-container');
             const errorDiv = document.getElementById('kategori-error');
 

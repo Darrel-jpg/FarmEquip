@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Http;
 
 class AdminAuthController extends Controller
 {
-    private string $apiUrl = 'http://localhost:8080/login';
+    private string $apiUrl = 'https://farmequip.up.railway.app/login';
 
     public function showLogin()
     {

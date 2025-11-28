@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 
 class ToolAdminController extends Controller
 {
-    private string $baseApi = 'http://localhost:8080/alat';
+    private string $baseApi = 'https://farmequip.up.railway.app/alat';
 
     // ✅ Tampil dashboard admin (list + filter)
     public function index(Request $request)

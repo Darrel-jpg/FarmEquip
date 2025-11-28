@@ -10,7 +10,7 @@ class ToolController extends Controller
 {
     public function index(Request $request)
     {
-        $endpoint = 'http://localhost:8080/alat';
+        $endpoint = 'https://farmequip.up.railway.app/alat';
 
         if ($request->filled('category')) {
             $endpoint .= '/' . $request->category;
@@ -73,7 +73,7 @@ class ToolController extends Controller
 
     public function product($id)
     {
-        $response = Http::get("http://localhost:8080/alat/{$id}");
+        $response = Http::get("https://farmequip.up.railway.app/alat/{$id}");
 
         if ($response->successful()) {
             $tool = $response->json();
