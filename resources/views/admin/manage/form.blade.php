@@ -27,7 +27,7 @@
                 <div class="sm:col-span-2">
                     <label class="block mb-2 text-sm font-medium text-gray-900">Nama Alat</label>
                     <input type="text" name="nama_alat" required autocomplete="off"
-                        value="{{ old('nama_alat', $tool['nama_alat'] ?? '') }}"
+                        value="{{ $tool['NamaAlat'] ?? '' }}"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#73AF6F] focus:border-[#73AF6F] block w-full p-2.5"
                         placeholder="Masukkan nama alat">
                 </div>
@@ -55,6 +55,11 @@
                         class="block w-full p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-[#73AF6F] focus:border-[#73AF6F]"
                         placeholder="Masukkan deskripsi alat">{{ old('deskripsi', $tool['deskripsi'] ?? '') }}</textarea>
                 </div>
+
+                <textarea name="spesifikasi" required
+                    class="block w-full p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-[#73AF6F] focus:border-[#73AF6F]"
+                    placeholder="Masukkan spesifikasi alat">{{ old('spesifikasi', $tool['spesifikasi'] ?? '') }}
+                </textarea>
 
                 <div>
                     <label class="block mb-2 text-sm font-medium text-gray-900">Harga Harian</label>
@@ -162,5 +167,29 @@
             alert("Gagal submit ke API Go!");
         }
     });
+    // ✅ Auto fill hanya dari data $tool yang dikirim backend
+    // ✅ Ambil data dari backend Laravel
+    const tool = <?php echo json_encode($tool ?? null); ?>;
+
+    if (tool) {
+        document.querySelector('input[name="nama_alat"]').value = tool.nama_alat || "";
+        document.querySelector('select[name="nama_kategori"]').value = tool.nama_kategori || "";
+        document.querySelector('textarea[name="deskripsi"]').value = tool.deskripsi || "";
+        document.querySelector('input[name="harga_per_hari"]').value = tool.harga_per_hari || "";
+        document.querySelector('input[name="harga_per_minggu"]').value = tool.harga_per_minggu || "";
+        document.querySelector('input[name="harga_per_bulan"]').value = tool.harga_per_bulan || "";
+
+        // ⚠️ Pastikan elemen spesifikasi ada sebelum diisi
+        const specEl = document.querySelector('textarea[name="spesifikasi"]');
+        if (specEl) {
+            specEl.value = tool.spesifikasi || "";
+        }
+
+        // Isi gambar Base64 jika ada
+        const imgEl = document.getElementById("base64Gambar");
+        if (imgEl) {
+            imgEl.value = tool.gambar || "";
+        }
+    }
 </script>
 @endsection
