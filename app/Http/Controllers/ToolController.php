@@ -75,12 +75,21 @@ class ToolController extends Controller
     {
         $response = Http::get("https://farmequip.up.railway.app/alat/{$id}");
 
-        if ($response->successful()) {
-            $tool = $response->json();
-
-            return view('product', compact('tool'));
+        if (!$response->successful()) {
+            return redirect()->route('tools')->with('error', 'Tool not found');
         }
 
-        return redirect()->route('tools')->with('error', 'Tool not found');
+        $tool = $response->json();
+
+        // Tangani response array atau single object
+        if (is_array($tool) && isset($tool[0])) {
+            $tool = $tool[0]; // jika array berisi 1 item
+        }
+
+        if (!is_array($tool) || empty($tool)) {
+            return redirect()->route('tools')->with('error', 'Tool not found');
+        }
+
+        return view('product', compact('tool'));
     }
 }
