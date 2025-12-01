@@ -16,54 +16,68 @@ class ToolAdminController extends Controller
     // ✅ Tampil list tools + filter
     public function index()
     {
-        $res = Http::get("https://farmequip.up.railway.app/alat");
+        $res = Http::get($this->baseApi);
         $tools = $res->successful() ? $res->json() : [];
 
         $catRes = Http::get("https://farmequip.up.railway.app/kategori");
         $categories = $catRes->successful() ? $catRes->json() : [];
 
         return view('admin.manage.index', [
-            'tools' => $tools,
+            'tools'      => $tools,
             'categories' => $categories,
-            'api' => "https://farmequip.up.railway.app/alat" // ✅ tambahkan ini
+            'tool'       => null, // ✅ biar view aman kalau butuh
+            'api'        => $this->baseApi
         ]);
     }
 
     // ✅ Buka form create (ambil kategori untuk dropdown dari API)
     public function create()
     {
-        $response = Http::get('https://farmequip.up.railway.app/kategori');
-        $categories = $response->successful() ? $response->json() : [];
+        $categoryRes = Http::get('https://farmequip.up.railway.app/kategori');
+        $categories = $categoryRes->successful() ? $categoryRes->json() : [];
 
         return view('admin.manage.form', [
             'mode'       => 'create',
-            'header'     => 'Add New Tool',
-            'categories' => $categories
+            'header'     => 'Tambah Data Tool',
+            'tool'       => null,        // ✅ biar Blade aman saat edit
+            'categories' => $categories, // ✅ jangan pakai $cat di sini
+            'api'        => $this->baseApi
         ]);
     }
 
     // ✅ Buka form edit (tool + kategori dari API)
     public function edit($id)
     {
-        $response = Http::get("{$this->baseApi}/{$id}");
-        $cat      = Http::get('https://farmequip.up.railway.app/kategori');
+        $res = Http::get("{$this->baseApi}/{$id}");
 
-        if (!$response->successful()) {
+        if (!$res->successful()) {
             return back()->with('error', 'Tool tidak ditemukan! ❌');
         }
+
+        // Karena JSON berupa array, kita ambil index pertama
+        $data = collect($res->json())->first();
 
         return view('admin.manage.form', [
             'mode'       => 'edit',
             'header'     => 'Edit Tool',
-            'tool'       => $response->json(),
-            'categories' => $cat->successful() ? $cat->json() : []
+            'tool'       => $data,      // ✅ langsung kirim data tool
+            'categories' => Http::get('https://farmequip.up.railway.app/kategori')->json() ?? []
         ]);
     }
 
     // ✅ Simpan tool baru (POST ke API)
     public function store(Request $request)
     {
-        $response = Http::post($this->baseApi, $request->all());
+        $response = Http::post($this->baseApi, [
+            "nama_alat"   => $request->nama_alat,
+            "kategori_id" => $request->kategori_id,
+            "deskripsi"   => $request->deskripsi,
+            "harga_per_hari" => $request->harga_per_hari,
+            "harga_per_minggu" => $request->harga_per_minggu,
+            "harga_per_bulan" => $request->harga_per_bulan,
+            "gambar"     => $request->gambar,
+            "spesifikasi" => $request->spesifikasi,
+        ]);
 
         return back()->with(
             $response->successful() ? 'success' : 'error',
@@ -71,15 +85,24 @@ class ToolAdminController extends Controller
         );
     }
 
-    // ✅ Update tool (PUT ke API)
     public function update(Request $request, $id)
     {
-        $response = Http::put("{$this->baseApi}/{$id}", $request->all());
+        $validated = $request->validate([
+            'kategori_id' => 'required|integer',
+            'nama_tools' => 'required',
+            'kondisi' => 'required',
+            'stok' => 'required|integer',
+        ]);
 
-        return back()->with(
-            $response->successful() ? 'success' : 'error',
-            $response->successful() ? 'Tool berhasil diupdate! ✅' : 'Gagal update tool! ❌'
-        );
+        // Kirim ke API
+        $response = Http::put("http://farmequip.up.railway.app/tools/$id", $validated);
+
+        if ($response->successful()) {
+            return redirect()->route('tools')
+                ->with('success', 'Data berhasil diperbarui!');
+        }
+
+        return back()->with('error', 'Gagal memperbarui data.');
     }
 
     // ✅ Hapus tool (DELETE ke API)
