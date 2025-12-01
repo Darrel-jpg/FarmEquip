@@ -36,7 +36,7 @@
     @elseif (session('success'))
     <div id="flash-alert" class="alert-success"> {{ session('success') }} </div>
     @endif
-    <script src="/js/login_register.js"></script>
+    <script src="/js/login.js"></script>
 </body>
 
 </html>

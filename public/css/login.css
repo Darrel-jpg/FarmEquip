@@ -1,5 +1,6 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
+/* ===== RESET & BASE ===== */
 * {
     margin: 0;
     padding: 0;
@@ -8,62 +9,60 @@
 }
 
 body {
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
     overflow: hidden;
     background: #73af6f;
 }
 
+/* ===== BACKGROUND WAVE EFFECT ===== */
 .wave {
     position: absolute;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     background: #73af6f;
     box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.4);
-    transition: 0.5s;
 }
 
 .wave span {
-    content: "";
     position: absolute;
     width: 325vh;
     height: 325vh;
     top: 0;
     left: 50%;
-    transform: translate(-50%, -75%);
     background: #000;
+    transform: translate(-50%, -75%);
 }
 
 .wave span:nth-child(1) {
-    border-radius: 45%;
     background: rgba(20, 20, 20, 1);
-    animation: animate 5s linear infinite;
+    border-radius: 45%;
+    animation: waveMove 5s linear infinite;
 }
 
 .wave span:nth-child(2) {
-    border-radius: 40%;
     background: rgba(20, 20, 20, 0.5);
-    animation: animate 10s linear infinite;
+    border-radius: 40%;
+    animation: waveMove 10s linear infinite;
 }
 
 .wave span:nth-child(3) {
-    border-radius: 42.5%;
     background: rgba(20, 20, 20, 0.5);
-    animation: animate 15s linear infinite;
+    border-radius: 42.5%;
+    animation: waveMove 15s linear infinite;
 }
 
-@keyframes animate {
-    0% {
+@keyframes waveMove {
+    from {
         transform: translate(-50%, -75%) rotate(0deg);
     }
-    100% {
+    to {
         transform: translate(-50%, -75%) rotate(360deg);
     }
 }
 
+/* ===== LOGIN CONTAINER ===== */
 .container {
     position: relative;
     width: 850px;
@@ -71,61 +70,46 @@ body {
     background: #fff;
     border-radius: 30px;
     margin: 20px;
-    box-shadow: 0 0 30px rgba(115, 175, 111, 0.5);
     overflow: hidden;
+    box-shadow: 0 0 30px rgba(115, 175, 111, 0.5);
 }
 
+/* ===== FORM BOX ===== */
 .form-box {
     position: absolute;
     right: 0;
-    height: 100%;
     width: 50%;
-    background: #fff;
+    height: 100%;
     display: flex;
     align-items: center;
+    padding: 40px;
+    background: #fff;
     color: #333;
     text-align: center;
-    padding: 40px;
-    z-index: 1;
-    transition: 0.6s ease-in-out 1.2s, visibility 0s 1s;
+    z-index: 2;
+    transition: 0.6s ease-in-out 0.2s;
 }
 
-.container.active .form-box {
+.container.active .form-box.login {
     right: 50%;
 }
 
-.form-box.register {
-    visibility: hidden;
-}
-
-.container.active .form-box.register {
-    visibility: visible;
-}
-
-form {
-    width: 100%;
-}
-
-.container h1 {
-    font-size: 36px;
-    margin: -10px 0;
-}
-
+/* ===== INPUT FIELD ===== */
 .input-box {
     position: relative;
-    margin: 30px 0;
+    margin: 25px 0;
 }
 
 .input-box input {
     width: 100%;
     padding: 13px 50px 13px 20px;
-    background: #eee;
-    border-radius: 8px;
     border: none;
     outline: none;
+    border-radius: 8px;
+    background: #eee;
     font-size: 16px;
-    color: #333;
     font-weight: 500;
+    color: #333;
 }
 
 .input-box input::placeholder {
@@ -138,7 +122,7 @@ form {
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 20px;
+    font-size: 18px;
     color: #888;
 }
 
@@ -146,153 +130,102 @@ form {
     cursor: pointer;
 }
 
-.forgot-link {
-    margin: -15px 0 15px;
-}
-
-.forgot-link a {
-    font-size: 14.5px;
+/* ===== REMEMBER ME ===== */
+.remember-box label {
+    font-size: 14px;
     color: #333;
-    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
 }
 
+/* ===== BUTTON ===== */
 .btn {
     width: 100%;
     height: 48px;
-    background: #73af6f;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(115, 175, 111, 0.3);
     border: none;
-    cursor: pointer;
-    color: #fff;
-    font-weight: 600;
-    font-size: 16px;
-}
-
-.btn:hover {
+    border-radius: 8px;
     background: #73af6f;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(115, 175, 111, 0.3);
     transition: background 0.3s ease;
 }
 
-.container p {
-    font-size: 14.5px;
-    margin: 15px 0;
+.btn:hover {
+    background: #4a7247;
 }
 
+/* ===== TOGGLE PANEL ===== */
 .toggle-box {
     position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
-.toggle-box::before {
-    content: "";
-    position: absolute;
-    left: -250%;
-    width: 300%;
-    height: 100%;
-    border-radius: 150px;
-    background: #ffab2f;
-    z-index: 2;
-    transition: 1.8s ease-in-out;
-}
-
-.container.active .toggle-box::before {
-    left: 50%;
+    inset: 0;
+    pointer-events: none;
 }
 
 .toggle-panel {
     position: absolute;
     width: 50%;
     height: 100%;
+    background: #73af6f;
     color: #fff;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 2;
-    transition: 0.6s ease-in-out;
-    background: #73af6f;
+    z-index: 1;
+    padding: 20px;
+    text-align: center;
+    pointer-events: auto;
 }
 
-.toggle-panel.toggle-left {
+.toggle-left {
     left: 0;
-    transition-delay: 1.2s;
 }
-
-.container.active .toggle-panel.toggle-left {
-    left: -50%;
-    transition-delay: 0.6s;
-}
-
-.toggle-panel.toggle-right {
+.toggle-right {
     right: -50%;
-    transition-delay: 0.6s;
 }
 
-.container.active .toggle-panel.toggle-right {
-    right: 0;
-    transition-delay: 1.2s;
+.container.active .toggle-left {
+    transform: translateX(-100%);
 }
 
-.toggle-panel p {
-    margin-bottom: 20px;
+.container.active .toggle-right {
+    transform: translateX(-100%);
 }
 
-.toggle-panel .btn {
-    width: 160px;
-    height: 46px;
-    background: #73af6f;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0 0 12px 2px rgba(92, 143, 89, 0.6);
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
-}
-
-.toggle-panel .btn:hover {
-    background: #4a7247;
-    box-shadow: 0 0 18px 4px rgba(74, 114, 71, 0.8);
-    transform: translateY(-2px);
-    transition: 0.3s ease;
-}
-
-.toggle-panel h1,
-.toggle-panel p,
-.btn {
-    user-select: none;
-}
-
+/* ===== FLASH ALERTS ===== */
 .alert-error,
 .alert-success {
-    text-align: center;
-    font-size: 14px;
-    border-radius: 6px;
-    padding: 10px 15px;
-    margin-bottom: 12px;
-    font-weight: 500;
-    animation: fadeIn 0.3s ease-in-out;
     position: absolute;
-    top: 10px;
+    top: 12px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 1000;
+    z-index: 100;
+    font-size: 14px;
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 500;
     max-width: 90%;
+    text-align: center;
+    animation: fadeAlert 0.3s ease-in-out;
 }
 
 .alert-error {
-    background-color: #ffe6e6;
+    background: #ffe6e6;
     color: #b71c1c;
     border: 1px solid #f5c6cb;
 }
 
 .alert-success {
-    background-color: #e6ffe6;
+    background: #e6ffe6;
     color: #1c7b1c;
     border: 1px solid #c6f5cb;
 }
 
-@keyframes fadeIn {
+@keyframes fadeAlert {
     from {
         opacity: 0;
         transform: translate(-50%, -5px);
@@ -303,284 +236,72 @@ form {
     }
 }
 
-/* ========== RESPONSIVE DESIGN ========== */
-
-/* Tablet - Layar Medium (768px - 1024px) */
-@media screen and (max-width: 1024px) {
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1024px) {
     .container {
         width: 700px;
         height: 500px;
     }
-
-    .container h1 {
-        font-size: 32px;
-    }
-
     .form-box {
         padding: 30px;
     }
-
-    .input-box {
-        margin: 25px 0;
-    }
 }
 
-@media screen and (max-width: 850px) {
+@media (max-width: 768px) {
     .container {
         width: 90%;
-        max-width: 600px;
-        height: 480px;
+        max-width: 450px;
+        height: auto;
+        min-height: 620px;
+        flex-direction: column;
+        display: flex;
     }
 
-    .container h1 {
-        font-size: 28px;
-    }
-
-    .form-box {
-        padding: 25px;
-    }
-}
-
-/* Mobile - Layar Kecil (max-width: 768px) */
-/* Animasi berubah dari horizontal ke vertikal */
-@media screen and (max-width: 768px) {
     body {
         padding: 20px;
     }
 
-    .container {
-        width: 100%;
-        max-width: 450px;
-        height: auto;
-        min-height: 600px;
-        border-radius: 20px;
-        display: flex;
-        flex-direction: column;
-    }
-
-    /* Form Box - Full width, positioned relatively */
     .form-box {
         position: relative;
-        right: auto;
         width: 100%;
-        height: auto;
-        padding: 30px 25px;
-        transition: transform 0.8s ease-in-out;
-        order: 1;
-    }
-
-    .form-box.login {
-        transform: translateY(0);
-    }
-
-    .form-box.register {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        transform: translateY(100%);
-        visibility: visible;
-        z-index: 0;
-    }
-
-    /* Active state - Register slide up from bottom */
-    .container.active .form-box.login {
-        transform: translateY(-100%);
-    }
-
-    .container.active .form-box.register {
-        transform: translateY(0);
-        z-index: 1;
-    }
-
-    .container h1 {
-        font-size: 28px;
-        margin-bottom: 10px;
-    }
-
-    .input-box {
-        margin: 20px 0;
-    }
-
-    .input-box input {
-        padding: 12px 45px 12px 18px;
-        font-size: 15px;
-    }
-
-    .input-box i {
-        right: 15px;
-        font-size: 18px;
-    }
-
-    .btn {
-        height: 46px;
-        font-size: 15px;
-    }
-
-    .remember-box {
-        margin-top: -5px !important;
-        margin-bottom: 12px !important;
-    }
-
-    .remember-box label {
-        font-size: 13px !important;
-    }
-
-    /* Toggle Box - Remove the circular background */
-    .toggle-box {
-        position: relative;
-        height: auto;
+        right: auto;
         order: 2;
+        padding: 30px 25px;
     }
 
-    .toggle-box::before {
-        display: none;
-    }
-
-    /* Toggle Panel - Always visible, positioned at top or bottom */
     .toggle-panel {
-        position: relative;
         width: 100%;
         height: auto;
-        padding: 30px 25px;
-        background: #ffab2f;
-        border-radius: 0;
-        transition: transform 0.8s ease-in-out;
-    }
-
-    /* Default: Login form top, Sign Up button bottom */
-    .toggle-panel.toggle-left {
-        left: auto;
-        transform: translateY(0);
-        order: 2;
-    }
-
-    /* Sign In button starts from top (hidden above) */
-    .toggle-panel.toggle-right {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: auto;
-        width: 100%;
-        transform: translateY(-100%);
-        order: 0;
-    }
-
-    /* Active: Register form top, Sign In button bottom */
-    .container.active .toggle-panel.toggle-left {
-        left: auto;
-        transform: translateY(100%);
-    }
-
-    .container.active .toggle-panel.toggle-right {
-        right: auto;
-        transform: translateY(0);
-    }
-
-    /* Round only top or bottom corners based on position */
-    .toggle-panel.toggle-left {
-        border-radius: 0 0 20px 20px;
-    }
-
-    .toggle-panel.toggle-right {
+        order: 1;
         border-radius: 20px 20px 0 0;
+        padding: 30px;
     }
+}
 
-    .toggle-panel h1 {
-        font-size: 26px;
+@media (max-width: 480px) {
+    .container {
+        margin: 10px;
+        min-height: 550px;
     }
-
-    .toggle-panel p {
+    .input-box input {
         font-size: 14px;
-        margin-bottom: 15px;
+        padding-right: 40px;
     }
-
-    .toggle-panel .btn {
-        width: 140px;
+    .btn {
+        font-size: 14px;
         height: 44px;
-        font-size: 15px;
     }
-
     .alert-error,
     .alert-success {
         font-size: 13px;
         padding: 8px 12px;
-        max-width: 85%;
     }
 }
 
-/* Extra Small Mobile (max-width: 480px) */
-@media screen and (max-width: 480px) {
-    .container {
-        max-width: 100%;
-        min-height: 550px;
-        margin: 10px;
-    }
-
-    .form-box {
-        padding: 25px 20px;
-        min-height: 420px;
-    }
-
-    .container h1 {
-        font-size: 26px;
-    }
-
-    .input-box {
-        margin: 18px 0;
-    }
-
-    .input-box input {
-        padding: 11px 40px 11px 16px;
-        font-size: 14px;
-    }
-
-    .btn {
-        height: 44px;
-        font-size: 14px;
-    }
-
+@media (max-height: 600px) and (orientation: landscape) {
+    .container,
+    .form-box,
     .toggle-panel {
-        padding: 25px 20px;
-    }
-
-    .toggle-panel h1 {
-        font-size: 24px;
-    }
-
-    .toggle-panel p {
-        font-size: 13px;
-    }
-
-    .toggle-panel .btn {
-        width: 130px;
-        height: 42px;
-        font-size: 14px;
-    }
-}
-
-/* Landscape mode untuk mobile */
-@media screen and (max-height: 600px) and (orientation: landscape) {
-    .container {
-        margin: 10px;
         min-height: auto;
-    }
-
-    .form-box {
-        min-height: auto;
-        padding: 20px;
-    }
-
-    .container h1 {
-        font-size: 24px;
-        margin-bottom: 5px;
-    }
-
-    .input-box {
-        margin: 12px 0;
-    }
-
-    .toggle-panel {
-        padding: 20px;
     }
 }

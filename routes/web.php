@@ -27,6 +27,12 @@ Route::middleware(['role:admin'])
             return view('admin.home');
         })->name('dashboard');
 
+        Route::prefix('kategori')->name('categories.')->group(function () {
+            Route::get('create', function () {
+                return view('admin.manage.form-category', ['mode' => 'create', 'header' => 'Tambah Kategori']);
+            })->name('create');
+        });
+
         Route::get('tools', [ToolAdminController::class, 'index'])->name('tools');
         Route::get('tools/create', [ToolAdminController::class, 'create'])->name('tools.create');
         Route::get('tools/{id}/edit', [ToolAdminController::class, 'edit'])->name('tools.edit');

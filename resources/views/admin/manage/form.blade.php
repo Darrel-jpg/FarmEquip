@@ -28,28 +28,31 @@
                     <label class="block mb-2 text-sm font-medium text-gray-900">Nama Alat</label>
                     <input type="text" name="nama_alat" required autocomplete="off"
                         value="{{ old('nama_alat', $tool['nama_alat'] ?? '') }}"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#FFAB2F] focus:border-[#FFAB2F] block w-full p-2.5"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#73AF6F] focus:border-[#73AF6F] block w-full p-2.5"
                         placeholder="Masukkan nama alat">
                 </div>
 
                 <div>
                     <label class="block mb-2 text-sm font-medium text-gray-900">Kategori</label>
-                    <select name="nama_kategori"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#FFAB2F] focus:border-[#FFAB2F] block w-full p-2.5">
+                    <select id="kategoriSelect" name="nama_kategori" required
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#73AF6F] focus:border-[#73AF6F] block w-full p-2.5">
                         <option value="" disabled {{ $mode=='create' ? 'selected' : '' }}>Select a category</option>
+
                         @foreach ($categories as $cat)
                         <option value="{{ $cat['nama_kategori'] }}"
                             {{ old('nama_kategori', $tool['nama_kategori'] ?? '') == $cat['nama_kategori'] ? 'selected' : '' }}>
                             {{ $cat['nama_kategori'] }}
                         </option>
                         @endforeach
+
+                        <option value="__add">➕ Tambah Kategori</option>
                     </select>
                 </div>
 
                 <div class="sm:col-span-2">
                     <label class="block mb-2 text-sm font-medium text-gray-900">Deskripsi</label>
                     <textarea name="deskripsi" rows="5" required
-                        class="block w-full p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-[#FFAB2F] focus:border-[#FFAB2F]"
+                        class="block w-full p-2.5 text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-[#73AF6F] focus:border-[#73AF6F]"
                         placeholder="Masukkan deskripsi alat">{{ old('deskripsi', $tool['deskripsi'] ?? '') }}</textarea>
                 </div>
 
@@ -57,7 +60,7 @@
                     <label class="block mb-2 text-sm font-medium text-gray-900">Harga Harian</label>
                     <input type="number" name="harga_per_hari" required
                         value="{{ old('harga_per_hari', $tool['harga_per_hari'] ?? '') }}"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#FFAB2F] focus:border-[#FFAB2F] block w-full p-2.5"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#73AF6F] focus:border-[#73AF6F] block w-full p-2.5"
                         placeholder="0">
                 </div>
 
@@ -65,7 +68,7 @@
                     <label class="block mb-2 text-sm font-medium text-gray-900">Harga Mingguan</label>
                     <input type="number" name="harga_per_minggu" required
                         value="{{ old('harga_per_minggu', $tool['harga_per_minggu'] ?? '') }}"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#FFAB2F] focus:border-[#FFAB2F] block w-full p-2.5"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#73AF6F] focus:border-[#73AF6F] block w-full p-2.5"
                         placeholder="0">
                 </div>
 
@@ -73,20 +76,21 @@
                     <label class="block mb-2 text-sm font-medium text-gray-900">Harga Bulanan</label>
                     <input type="number" name="harga_per_bulan" required
                         value="{{ old('harga_per_bulan', $tool['harga_per_bulan'] ?? '') }}"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#FFAB2F] focus:border-[#FFAB2F] block w-full p-2.5"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#73AF6F] focus:border-[#73AF6F] block w-full p-2.5"
                         placeholder="0">
                 </div>
 
                 <div class="sm:col-span-2">
-                    <label class="block mb-2 text-sm font-medium text-gray-900">Gambar (Base64)</label>
-                    <textarea name="gambar" rows="3"
-                        class="block w-full p-2.5 text-xs text-gray-900 bg-gray-50 rounded-lg border border-gray-300 font-mono focus:ring-[#FFAB2F] focus:border-[#FFAB2F]"
-                        placeholder="Paste base64 gambar di sini">{{ old('gambar', $tool['gambar'] ?? '') }}</textarea>
+                    <label class="block mb-2 text-sm font-medium text-gray-900">Gambar</label>
+                    <input type="file" id="gambarUpload" accept="image/png, image/jpeg"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-[#73AF6F] focus:border-[#73AF6F] block w-full p-2.5">
+                    <textarea id="base64Gambar" name="gambar" hidden>{{ old('gambar', $tool['gambar'] ?? '') }}</textarea>
+                    <p class="mt-1 text-xs text-gray-500">Format wajib: PNG / JPG</p>
                 </div>
 
                 <div class="flex items-center gap-3 sm:col-span-2">
                     <button type="submit"
-                        class="px-5 py-2.5 text-sm font-medium text-white bg-[#FFAB2F] rounded-lg hover:bg-[#FF9D0A] transition">
+                        class="px-5 py-2.5 text-sm font-medium text-white bg-[#73AF6F] rounded-lg hover:bg-[#5E9E5A] transition">
                         {{ $mode=='edit' ? 'Update' : 'Create' }}
                     </button>
 
@@ -103,6 +107,32 @@
 </div>
 
 <script>
+    // Redirect ke form tambah kategori
+    document.getElementById('kategoriSelect').addEventListener('change', function() {
+        if (this.value === '__add') {
+            location.href = "{{ route('admin.categories.create') }}";
+        }
+    });
+
+    // Convert image file ke Base64 otomatis
+    document.getElementById('gambarUpload').addEventListener('change', function() {
+        const file = this.files[0];
+        if (!file) return;
+
+        const validTypes = ["image/png", "image/jpeg"];
+        if (!validTypes.includes(file.type)) {
+            alert("Format gambar harus PNG atau JPG!");
+            this.value = "";
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            document.getElementById('base64Gambar').value = reader.result;
+        };
+        reader.readAsDataURL(file);
+    });
+
     document.getElementById('toolForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
