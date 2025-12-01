@@ -16,40 +16,13 @@
                 </li>
                 <li>
                     <x-nav-link href="{{ route('admin.tools') }}" :active="request()->is('admin/tools')">
-                        Farm Tools
+                        Manage Tools
                     </x-nav-link>
                 </li>
-                <!-- Dropdown menu -->
                 <li>
-                    <button id="dropdownNvbarButton" data-dropdown-toggle="dropdownNavbar"
-                        class="flex items-center justify-between w-full py-2 px-3 rounded font-semibold md:w-auto hover:bg-neutral-tertiary md:hover:bg-transparent md:border-0 md:p-0 
-        {{ Request::is('tools*') ? 'text-heading' : 'text-white md:hover:text-heading' }} ">
-                        Management
-                        <svg class="w-4 h-4 ms-1.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                            width="24" height="24" fill="none" viewBox="0 0 24 24">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" d="m19 9-7 7-7-7" />
-                        </svg>
-                    </button>
-
-                    <div id="dropdownNavbar"
-                        class="z-10 hidden w-44 my-4 list-none divide-y rounded-lg shadow-sm bg-[#73AF6F] divide-[#73AF6F]">
-                        <ul class="py-2 text-sm text-white font-medium" aria-labelledby="dropdownNvbarButton">
-                            <li>
-                                <a href="{{ route('admin.tools.create') }}"
-                                    class="inline-flex items-center w-full p-2 hover:bg-[#73AF6F]">
-                                    Create Tools
-                                </a>
-                            </li>
-                            <li>
-                                <!-- Karena edit butuh {id}, ini biasanya halaman list tools -->
-                                <a href="{{ route('admin.tools') }}"
-                                    class="inline-flex items-center w-full p-2 hover:bg-[#73AF6F]">
-                                    Manage Tools
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
+                    <x-nav-link href="{{ route('admin.tools.create') }}" :active="request()->is('admin/tools/create')">
+                        Create Tools
+                    </x-nav-link>
                 </li>
                 <li>
                     <x-nav-link href="{{ route('admin.logout') }}">
