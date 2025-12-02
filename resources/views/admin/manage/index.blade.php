@@ -160,21 +160,30 @@
 </div>
 
 <script>
-    // ✅ DELETE FETCH + CSRF
     document.querySelectorAll('.deleteBtn').forEach(btn => {
-        btn.addEventListener('click', () => {
-            let id = btn.dataset.id;
-            let name = btn.dataset.name;
-            if (!id) return;
+        btn.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const name = this.dataset.name;
 
-            if (confirm(`Yakin ingin menghapus alat "${name}" ?`)) {
-                fetch(`{{ $api }}/${id}`, {
+            if (!confirm(`Yakin ingin menghapus alat "${name}"?`)) return;
+
+            fetch("{{ url('/admin/tools') }}/" + id, {
                     method: "DELETE",
                     headers: {
-                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
+                        "Accept": "application/json"
                     }
-                }).then(r => r.ok ? location.reload() : alert('Gagal hapus! ❌'));
-            }
+                })
+                .then(res => {
+                    if(res.ok) {
+                        alert("Berhasil dihapus!");
+                        location.reload();
+                    } else {
+                        alert("Gagal menghapus! Status: " + res.status);
+                    }
+
+                })
+                .catch(err => alert("Error: " + err));
         });
     });
 

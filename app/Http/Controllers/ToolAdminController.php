@@ -66,24 +66,64 @@ class ToolAdminController extends Controller
     }
 
     // ✅ Simpan tool baru (POST ke API)
-    public function store(Request $request)
+    public function store(Request $req)
     {
-        $response = Http::post($this->baseApi, [
-            "nama_alat"   => $request->nama_alat,
-            "kategori_id" => $request->kategori_id,
-            "deskripsi"   => $request->deskripsi,
-            "harga_per_hari" => $request->harga_per_hari,
-            "harga_per_minggu" => $request->harga_per_minggu,
-            "harga_per_bulan" => $request->harga_per_bulan,
-            "gambar"     => $request->gambar,
-            "spesifikasi" => $request->spesifikasi,
+        $req->validate([
+            'nama_alat'     => 'required',
+            'kategori_id'   => 'required|integer',
+            'gambar'        => 'required|file|mimes:jpg,png,jpeg',
         ]);
 
-        return back()->with(
-            $response->successful() ? 'success' : 'error',
-            $response->successful() ? 'Tool berhasil ditambahkan! ✅' : 'Gagal menambah tool! ❌'
-        );
+        $image = $req->file('gambar');
+
+        // Kirim FILE langsung ke API Go
+        $post = Http::asMultipart()->post('https://farmequip.up.railway.app/alat', [
+            [
+                'name' => 'nama_alat',
+                'contents' => $req->nama_alat,
+            ],
+            [
+                'name' => 'kategori_id',
+                'contents' => $req->kategori_id,
+            ],
+            [
+                'name' => 'deskripsi',
+                'contents' => $req->deskripsi,
+            ],
+            [
+                'name' => 'spesifikasi',
+                'contents' => $req->spesifikasi,
+            ],
+            [
+                'name' => 'harga_per_hari',
+                'contents' => $req->harga_per_hari,
+            ],
+            [
+                'name' => 'harga_per_minggu',
+                'contents' => $req->harga_per_minggu,
+            ],
+            [
+                'name' => 'harga_per_bulan',
+                'contents' => $req->harga_per_bulan,
+            ],
+
+            // 📌 Yang paling penting
+            [
+                'name' => 'gambar',
+                'contents' => fopen($image->getPathname(), 'r'),
+                'filename' => $image->getClientOriginalName(),
+            ],
+        ]);
+
+        if (!$post->successful()) {
+            dd($post->status(), $post->body()); // Kalau gagal tampilkan error API
+            return back()->with('error', 'Gagal menambah alat ke API!');
+        }
+
+        return redirect()->route('admin.tools')
+            ->with('success', 'Alat berhasil ditambahkan!');
     }
+
 
     public function update(Request $request, $id)
     {
@@ -95,7 +135,7 @@ class ToolAdminController extends Controller
         ]);
 
         // Kirim ke API
-        $response = Http::put("http://farmequip.up.railway.app/tools/$id", $validated);
+        $response = Http::put("http://farmequip.up.railway.app/alat/$id", $validated);
 
         if ($response->successful()) {
             return redirect()->route('tools')
@@ -108,12 +148,13 @@ class ToolAdminController extends Controller
     // ✅ Hapus tool (DELETE ke API)
     public function destroy($id)
     {
-        $response = Http::delete("{$this->baseApi}/{$id}");
+        $response = Http::delete("https://farmequip.up.railway.app/alat?id={$id}");
 
-        return back()->with(
-            $response->successful() ? 'success' : 'error',
-            $response->successful() ? 'Tool berhasil dihapus! ✅' : 'Gagal menghapus tool! ❌'
-        );
+        if ($response->successful()) {
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['error' => 'Gagal menghapus'], 500);
     }
 
     // 🔍 Filter logic (copas dari guest)

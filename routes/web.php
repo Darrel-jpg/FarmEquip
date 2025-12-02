@@ -35,10 +35,11 @@ Route::middleware(['role:admin'])
 
         Route::get('tools', [ToolAdminController::class, 'index'])->name('tools');
         Route::get('tools/create', [ToolAdminController::class, 'create'])->name('tools.create');
-        Route::post('tools/create', [ToolAdminController::class, 'store'])->name('tools.store');
+        Route::post('tools', [ToolAdminController::class, 'store'])->name('tools.store');
         Route::get('tools/{id}/edit', [ToolAdminController::class, 'edit'])->name('tools.edit');
         Route::put('tools/{id}', [ToolAdminController::class, 'update'])->name('tools.update');
-        Route::delete('tools/{id}', [ToolAdminController::class, 'destroy'])->name('tools.destroy');
+        Route::delete('tools/{id}', [ToolAdminController::class, 'destroy'])
+            ->name('tools.destroy');
     });
 
 // LOGOUT ADMIN
