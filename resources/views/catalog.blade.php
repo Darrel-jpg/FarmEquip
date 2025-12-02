@@ -140,9 +140,9 @@
                 <div class="h-56 w-full overflow-hidden rounded-lg">
                     <a href="{{ route('product', $tool['id']) }}">
                         <img
-                            src="data:image/*;base64,{{ $tool['gambar'] }}"
+                            src="{{ $tool['gambar'] }}"
                             alt="{{ $tool['nama_alat'] ?? 'Gambar' }}"
-                            class="w-full h-full object-cover">
+                            class="w-full h-full object-contain">
                     </a>
                 </div>
                 <div class="pt-6 flex flex-col grow">

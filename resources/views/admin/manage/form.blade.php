@@ -17,7 +17,7 @@
         <div class="bg-red-100 text-red-800 px-4 py-2 rounded-lg mb-4">{{ session('error') }}</div>
         @endif
 
-        <form id="toolForm" enctype="multipart/form-data">
+        <form action="{{ route('admin.tools.store') }}" id="toolForm" enctype="multipart/form-data">
 
             @csrf
 

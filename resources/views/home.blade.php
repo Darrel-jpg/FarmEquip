@@ -9,7 +9,7 @@
             <img src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?q=80&w=1740&auto=format&fit=crop"
                  alt="Pertanian Modern"
                  class="w-full h-full object-cover opacity-60 scale-105 animate-pulse-slow">
-            <div class="absolute inset-0 bg-gradient-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
+            <div class="absolute inset-0 bg-linear-to-r from-slate-900 via-slate-900/80 to-transparent"></div>
         </div>
 
         <div class="container mx-auto px-6 z-10 relative mt-10">
@@ -21,7 +21,7 @@
 
                 <h1 class="text-5xl md:text-7xl font-extrabold text-white leading-tight mb-6 tracking-tight">
                     Panen Melimpah <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-300">
+                    <span class="text-transparent bg-clip-text bg-linear-to-r from-emerald-400 to-teal-300">
                         Tanpa Beli Alat
                     </span>
                 </h1>

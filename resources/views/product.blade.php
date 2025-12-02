@@ -3,12 +3,12 @@
 @section('title', 'Product Details')
 
 @section('content')
-<section class="py-6 mt-13 rounded bg-white md:py-16 antialiased">
+<section class="py-6 mx-4 mt-13 rounded bg-white md:py-16 md:mx-8 antialiased">
     <div class="max-w-7xl px-4 mx-auto 2xl:px-0">
         <div class="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
             <div class="shrink-0 max-w-md lg:max-w-lg mx-auto">
                 <img class="w-full block"
-                    src="data:image/*;base64,{{ $tool['gambar'] }}"
+                    src="{{ $tool['gambar'] }}"
                     alt="{{ $tool['nama_alat'] }}" />
             </div>
 
