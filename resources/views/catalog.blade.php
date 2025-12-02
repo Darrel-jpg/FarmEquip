@@ -140,7 +140,7 @@
                         <div class="h-56 w-full">
                             <a href="{{ route('product', $tool['id']) }}">
                                 <img class="mx-auto h-full block"
-                                    src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/imac-front-dark.svg"
+                                    src="data:image/*;base64,{{ $tool['gambar'] }}"
                                     alt="{{ $tool['nama_alat'] }}" />
                             </a>
                         </div>

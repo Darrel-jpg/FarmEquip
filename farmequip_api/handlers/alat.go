@@ -81,7 +81,6 @@ func GetAlat(db *sql.DB) http.HandlerFunc {
 			}
 		})
 
-		// Output JSON
 		json.NewEncoder(w).Encode(list)
 	}
 }
