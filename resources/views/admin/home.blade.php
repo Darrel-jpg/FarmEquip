@@ -1,6 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.app-admin')
 
-@section('title', 'Solusi Tani Modern')
+@section('title', 'Home')
 
 @section('content')
     {{-- 1. HERO SECTION --}}

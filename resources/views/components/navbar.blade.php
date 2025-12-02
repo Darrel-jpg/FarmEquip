@@ -1,6 +1,6 @@
-<nav class="bg-[#73AF6F] fixed w-full z-20 top-0 start-0 border-b border-default">
+<nav class="bg-[#73AF6F] fixed w-full z-50 top-0 start-0 border-b border-default">
   <div class="max-w-7xl flex flex-wrap items-center justify-between mx-auto p-4">
-    <a href="https://flowbite.com/" class="flex items-center space-x-3 rtl:space-x-reverse">
+    <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
         <span class="self-center text-xl text-heading font-bold whitespace-nowrap">FarmEquip</span>
     </a>
     <button data-collapse-toggle="navbar-default" type="button" class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-body rounded-base md:hidden hover:bg-[#89C484] hover:text-heading focus:outline-none focus:ring-2 focus:ring-neutral-tertiary" aria-controls="navbar-default" aria-expanded="false">
@@ -14,9 +14,6 @@
         </li>
         <li>
             <x-nav-link href="/tools" :active="request()->is('tools')">Farm Tools</x-nav-link>
-        </li>
-        <li>
-            <x-nav-link href="#" :active="request()->is('contact')">Contact</x-nav-link>
         </li>
       </ul>
     </div>
