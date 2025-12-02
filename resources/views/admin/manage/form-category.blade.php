@@ -1,4 +1,4 @@
-@extends('layouts.app-admin')
+@extends('layouts.app')
 @section('title', $mode == 'create' ? 'Create Category' : 'Edit Category')
 
 @section('content')

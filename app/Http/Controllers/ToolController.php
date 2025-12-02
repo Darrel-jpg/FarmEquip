@@ -81,9 +81,8 @@ class ToolController extends Controller
 
         $tool = $response->json();
 
-        // Tangani response array atau single object
         if (is_array($tool) && isset($tool[0])) {
-            $tool = $tool[0]; // jika array berisi 1 item
+            $tool = $tool[0];
         }
 
         if (!is_array($tool) || empty($tool)) {
