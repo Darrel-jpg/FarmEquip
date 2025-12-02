@@ -14,10 +14,13 @@ class ToolAdminController extends Controller
     private string $baseApi = 'https://farmequip.up.railway.app/alat';
 
     // ✅ Tampil list tools + filter
-    public function index()
+    public function index(Request $request)
     {
         $res = Http::get($this->baseApi);
-        $tools = $res->successful() ? $res->json() : [];
+        $tools = collect($res->successful() ? $res->json() : []);
+
+        // APPLY FILTER
+        $tools = $this->applyFilters($tools, $request);
 
         $catRes = Http::get("https://farmequip.up.railway.app/kategori");
         $categories = $catRes->successful() ? $catRes->json() : [];
@@ -25,7 +28,6 @@ class ToolAdminController extends Controller
         return view('admin.manage.index', [
             'tools'      => $tools,
             'categories' => $categories,
-            'tool'       => null, // ✅ biar view aman kalau butuh
             'api'        => $this->baseApi
         ]);
     }

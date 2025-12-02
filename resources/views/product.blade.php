@@ -8,7 +8,7 @@
         <div class="lg:grid lg:grid-cols-2 lg:gap-8 xl:gap-16">
             <div class="shrink-0 max-w-md lg:max-w-lg mx-auto">
                 <img class="w-full block"
-                    src="data:image/*;base64,{{ $tool['gambar'] }}"
+                    src="{{ $tool['gambar'] }}"
                     alt="{{ $tool['nama_alat'] }}" />
             </div>
 

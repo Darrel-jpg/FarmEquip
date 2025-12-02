@@ -186,23 +186,6 @@
                 .catch(err => alert("Error: " + err));
         });
     });
-
-    // ✅ FILTER FRONTEND REALTIME
-    searchInput.addEventListener("input", applyFilter);
-    filterCategory.addEventListener("change", applyFilter);
-
-    function applyFilter() {
-        const s = searchInput.value.toLowerCase();
-        const c = filterCategory.value.toLowerCase();
-
-        document.querySelectorAll("#tableBody tr").forEach(row => {
-            const name = row.dataset.name || "";
-            const cat = row.dataset.category || "";
-            const matchSearch = name.includes(s);
-            const matchCat = c === "" || cat === c;
-            row.style.display = (matchSearch && matchCat) ? "" : "none";
-        });
-    }
 </script>
 
 @endsection
