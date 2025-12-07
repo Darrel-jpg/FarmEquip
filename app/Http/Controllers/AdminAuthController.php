@@ -57,7 +57,7 @@ class AdminAuthController extends Controller
             session()->put('remember_admin', true);
         }
 
-        return redirect()->route('admin.dashboard')
+        return redirect()->route('home')
             ->with('success', 'Berhasil login');
     }
 
