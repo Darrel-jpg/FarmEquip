@@ -56,7 +56,6 @@ class AdminAuthController extends Controller
     {
         $req->session()->flush(); 
 
-        return redirect()->route('admin.login')
-            ->with('success', 'Berhasil logout');
+        return redirect()->route('admin.login')->with('success', 'Berhasil logout');
     }
 }
