@@ -17,7 +17,6 @@ class ToolAdminController extends Controller
         $res = Http::get($this->baseApi);
         $tools = collect($res->successful() ? $res->json() : []);
 
-        // APPLY FILTER
         $tools = $this->applyFilters($tools, $request);
 
         $catRes = Http::get("https://farmequip.up.railway.app/kategori");
