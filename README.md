@@ -215,7 +215,7 @@ go run main.go routes.go
 ```json
 {
   "username": "admin",
-  "password": "password123"
+  "password": "admin"
 }
 ```
 
@@ -296,116 +296,6 @@ gambar: [file]
 6. Middleware `RoleMiddleware` melindungi route admin
 
 ---
-
-## 📝 Best Practices yang Diterapkan
-
-### Go API
-- ✅ Functional programming dengan pure functions
-- ✅ Higher-order functions untuk reusability
-- ✅ Separation of concerns (handlers, models, database)
-- ✅ CORS middleware untuk cross-origin requests
-- ✅ Error handling yang proper
-
-### Laravel
-- ✅ MVC architecture
-- ✅ Form validation dengan Laravel request
-- ✅ Blade components untuk reusable UI
-- ✅ Session-based authentication
-- ✅ Middleware untuk route protection
-- ✅ Environment-based configuration
-
----
-
-## 🚧 Troubleshooting
-
-### API tidak bisa diakses
-- Pastikan Go API berjalan di port 8080
-- Check CORS configuration di `routes.go`
-- Verifikasi database connection di `.env`
-
-### Upload gambar gagal
-- Pastikan kredensial Cloudinary sudah benar di `.env`
-- Check file size dan format (max 2MB, JPG/PNG/JPEG)
-- Verifikasi koneksi internet
-
-### Session tidak tersimpan
-- Jalankan `php artisan config:cache`
-- Pastikan session driver di `.env` sudah correct
-- Clear browser cookies
-
-### Database connection error
-- Verifikasi kredensial di `.env` (Laravel dan Go)
-- Pastikan MySQL service berjalan
-- Check database sudah dibuat
-
----
-
-## 🔮 Future Improvements
-
-- [ ] Implementasi sistem booking real-time
-- [ ] Payment gateway integration (Midtrans/Xendit)
-- [ ] Rating & review system
-- [ ] Real-time chat dengan pemilik alat
-- [ ] Mobile app (React Native)
-- [ ] Advanced analytics dashboard
-- [ ] Multi-language support (ID/EN)
-- [ ] Email notification system
-- [ ] Export data to PDF/Excel
-- [ ] Advanced search dengan Elasticsearch
-
----
-
-## 📸 Screenshots
-
-### Homepage
-![Homepage](https://via.placeholder.com/800x400?text=Homepage+Screenshot)
-
-### Catalog
-![Catalog](https://via.placeholder.com/800x400?text=Catalog+Screenshot)
-
-### Admin Dashboard
-![Admin Dashboard](https://via.placeholder.com/800x400?text=Admin+Dashboard+Screenshot)
-
----
-
-## 👨‍💻 Developer
-
-Dikembangkan oleh **Your Name**
-
-- 📧 Email: your.email@example.com
-- 🌐 GitHub: [@yourusername](https://github.com/yourusername)
-- 💼 LinkedIn: [Your Name](https://linkedin.com/in/yourprofile)
-
----
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome!
-
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgments
-
-- [Laravel](https://laravel.com) - The PHP Framework
-- [Go](https://golang.org) - The Go Programming Language
-- [Tailwind CSS](https://tailwindcss.com) - A utility-first CSS framework
-- [Flowbite](https://flowbite.com) - Tailwind CSS component library
-- [Cloudinary](https://cloudinary.com) - Image and Video Management
-
----
-
 <div align="center">
 
 **FarmEquip** - Solusi Tani Modern
